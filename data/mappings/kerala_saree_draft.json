@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "local_category": "kerala_saree",
+  "amazon_product_type": "UNCONFIRMED",
+  "status": "draft",
+  "mappings": [
+    {"local_attribute": "title", "amazon_attribute": "item_name", "transform": "value_array"},
+    {"local_attribute": "brand", "amazon_attribute": "brand", "transform": "value_array"},
+    {"local_attribute": "fabric_type", "amazon_attribute": "material", "transform": "value_array"},
+    {"local_attribute": "body_colour", "amazon_attribute": "color", "transform": "value_array"}
+  ]
+}

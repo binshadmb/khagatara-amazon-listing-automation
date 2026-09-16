@@ -1,0 +1,32 @@
+{
+  "category": "kerala_saree",
+  "dimensions": {
+    "body_colour": [
+      {"value":"White","code":"WHT"},{"value":"Cream","code":"CRM"},{"value":"Off White","code":"OFW"},{"value":"Ivory","code":"IVY"},{"value":"Beige","code":"BEI"},{"value":"Golden","code":"GLD"},{"value":"Rose Gold","code":"RSG"},{"value":"Silver","code":"SLV"},{"value":"Maroon","code":"MRN"},{"value":"Red","code":"RED"},{"value":"Pink","code":"PNK"},{"value":"Peach","code":"PCH"},{"value":"Orange","code":"ORG"},{"value":"Yellow","code":"YLW"},{"value":"Green","code":"GRN"},{"value":"Bottle Green","code":"BGR"},{"value":"Dark Green","code":"DGR"},{"value":"Blue","code":"BLU"},{"value":"Navy Blue","code":"NVY"},{"value":"Purple","code":"PUR"},{"value":"Black","code":"BLK"},{"value":"Custom","code":"CUS"}
+    ],
+    "fabric_type": [
+      {"value":"Cotton","code":"COT"},{"value":"Pure Cotton","code":"PCO"},{"value":"Handloom Cotton","code":"HCO"},{"value":"Silk","code":"SLK"},{"value":"Cotton Silk","code":"CSK"},{"value":"Tissue","code":"TIS"},{"value":"Tissue Cotton","code":"TCT"},{"value":"Organza","code":"ORG"},{"value":"Chiffon","code":"CHF"},{"value":"Georgette","code":"GEO"},{"value":"Linen","code":"LIN"},{"value":"Linen Cotton","code":"LCT"},{"value":"Rayon","code":"RAY"},{"value":"Other","code":"OTH"}
+    ],
+    "border_width": [
+      {"value":"No Border","code":"NB"},{"value":"Very Thin","code":"VT"},{"value":"0.5 inch","code":"05"},{"value":"1 inch","code":"1"},{"value":"1.5 inch","code":"15"},{"value":"2 inch","code":"2"},{"value":"2.5 inch","code":"25"},{"value":"3 inch","code":"3"},{"value":"4 inch","code":"4"},{"value":"5 inch","code":"5"},{"value":"Broad","code":"BRD"},{"value":"Custom","code":"CUS"}
+    ],
+    "border_colour": [
+      {"value":"Gold","code":"GLD"},{"value":"Rose Gold","code":"RSG"},{"value":"Silver","code":"SLV"},{"value":"Copper","code":"COP"},{"value":"Maroon","code":"MRN"},{"value":"Red","code":"RED"},{"value":"Green","code":"GRN"},{"value":"Blue","code":"BLU"},{"value":"Black","code":"BLK"},{"value":"White","code":"WHT"},{"value":"Custom","code":"CUS"}
+    ],
+    "work": [
+      {"value":"Plain","code":"PLN"},{"value":"Tissue Work","code":"TIS"},{"value":"Non-Tissue","code":"NTI"},{"value":"Sequence Work","code":"SEQ"},{"value":"Non-Sequence","code":"NSQ"},{"value":"Zari Work","code":"ZAR"},{"value":"Kasavu","code":"KAS"},{"value":"Embroidery","code":"EMB"},{"value":"Woven Work","code":"WOV"},{"value":"Printed Work","code":"PRT"},{"value":"Jacquard","code":"JAC"},{"value":"Thread Work","code":"THR"},{"value":"Hand Work","code":"HND"},{"value":"Other","code":"OTH"}
+    ],
+    "motif": [
+      {"value":"Plain","code":"PLN"},{"value":"Floral","code":"FLR"},{"value":"Peacock","code":"PEA"},{"value":"Deer","code":"DER"},{"value":"Kathakali","code":"KAT"},{"value":"Temple","code":"TMP"},{"value":"Paisley","code":"PAI"},{"value":"Leaf","code":"LEF"},{"value":"Lotus","code":"LOT"},{"value":"Mango","code":"MNG"},{"value":"Geometric","code":"GEO"},{"value":"Traditional","code":"TRD"},{"value":"Kerala Motif","code":"KMO"},{"value":"Abstract","code":"ABS"},{"value":"Animal","code":"ANI"},{"value":"Bird","code":"BRD"},{"value":"Custom","code":"CUS"}
+    ],
+    "pallu_style": [
+      {"value":"Plain","code":"PLN"},{"value":"Contrast","code":"CON"},{"value":"Zari","code":"ZAR"},{"value":"Kasavu","code":"KAS"},{"value":"Tissue","code":"TIS"},{"value":"Printed","code":"PRT"},{"value":"Woven","code":"WOV"},{"value":"Designer","code":"DSG"}
+    ],
+    "occasion": [
+      {"value":"Daily Wear","code":"DLY"},{"value":"Office Wear","code":"OFF"},{"value":"Casual","code":"CAS"},{"value":"Festival","code":"FES"},{"value":"Onam","code":"ONM"},{"value":"Vishu","code":"VIS"},{"value":"Wedding","code":"WED"},{"value":"Reception","code":"RCP"},{"value":"Temple","code":"TMP"},{"value":"Party","code":"PTY"},{"value":"Formal","code":"FOR"}
+    ],
+    "weave": [
+      {"value":"Handloom","code":"HND"},{"value":"Powerloom","code":"PWR"},{"value":"Plain Weave","code":"PLN"},{"value":"Jacquard Weave","code":"JAC"},{"value":"Dobby","code":"DOB"},{"value":"Other","code":"OTH"}
+    ]
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "accept": ["fabric_type", "colour", "pattern", "neck_style", "sleeve_length"],
+  "edits": {
+    "garment_length": "Long"
+  }
+}

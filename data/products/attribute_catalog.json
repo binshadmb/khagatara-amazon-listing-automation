@@ -1,0 +1,87 @@
+{
+  "version": 1,
+  "categories": {
+    "kerala_saree": {
+      "display_name": "Kerala Saree",
+      "attributes": [
+        {"name": "title", "label": "Product Title", "group": "Identity", "data_type": "text", "required": true},
+        {"name": "brand", "label": "Brand", "group": "Identity", "data_type": "text", "required": true},
+        {"name": "fabric_type", "label": "Fabric Type", "group": "Material & Construction", "data_type": "enum", "required": true, "allowed_values": ["Cotton", "Kerala Cotton", "Kasavu Cotton", "Silk", "Cotton Silk", "Linen", "Rayon", "Viscose", "Polyester Blend", "Tissue"]},
+        {"name": "weave", "label": "Weave", "group": "Material & Construction", "data_type": "enum", "allowed_values": ["Handloom", "Powerloom", "Jacquard", "Plain Weave", "Tissue Weave", "Kota Weave"]},
+        {"name": "body_colour", "label": "Body Colour", "group": "Design", "data_type": "text", "required": true},
+        {"name": "border_colour", "label": "Border Colour", "group": "Design", "data_type": "text"},
+        {"name": "border_type", "label": "Border Type", "group": "Design", "data_type": "enum", "allowed_values": ["Kasavu", "Contrast", "Self Border", "Temple Border", "Zari Border", "No Border"]},
+        {"name": "border_width", "label": "Border Width", "group": "Design", "data_type": "enum", "allowed_values": ["No Border", "Very Thin", "0.5 inch", "1 inch", "1.5 inch", "2 inch", "2.5 inch", "3 inch", "4 inch", "5 inch", "Broad", "Custom"]},
+        {"name": "pattern", "label": "Pattern", "group": "Design", "data_type": "enum", "allowed_values": ["Solid", "Striped", "Checked", "Floral", "Printed", "Woven", "Embroidered", "Temple", "Paisley", "Geometric"]},
+        {"name": "motif", "label": "Motif", "group": "Design", "data_type": "text"},
+        {"name": "work", "label": "Body Work", "group": "Design", "data_type": "enum", "allowed_values": ["None", "Kasavu", "Zari", "Zari Work", "Embroidery", "Printed", "Woven", "Woven Work", "Tissue Work", "Stone Work", "Sequin Work", "Thread Work"]},
+        {"name": "border_work", "label": "Border Work", "group": "Design", "data_type": "enum", "allowed_values": ["None", "Zari", "Embroidery", "Woven", "Stone Work", "Thread Work"]},
+        {"name": "saree_length_cm", "label": "Saree Length (cm)", "group": "Dimensions", "data_type": "number", "required": true},
+        {"name": "width_cm", "label": "Width (cm)", "group": "Dimensions", "data_type": "number", "required": true},
+        {"name": "blouse_piece_included", "label": "Blouse Piece Included", "group": "Included Items", "data_type": "boolean", "required": true},
+        {"name": "blouse_piece_length_cm", "label": "Blouse Piece Length (cm)", "group": "Included Items", "data_type": "number"},
+        {"name": "occasion", "label": "Occasion", "group": "Style", "data_type": "enum", "allowed_values": ["Daily Wear", "Office Wear", "Casual", "Festival", "Festive", "Onam", "Vishu", "Wedding", "Reception", "Temple", "Party", "Formal", "Traditional", "Gift"]},
+        {"name": "style", "label": "Style", "group": "Style", "data_type": "enum", "allowed_values": ["Traditional", "Contemporary", "Minimal", "Ethnic", "Designer"]},
+        {"name": "transparency", "label": "Transparency", "group": "Style", "data_type": "enum", "allowed_values": ["Opaque", "Semi-Sheer", "Sheer"]},
+        {"name": "finish", "label": "Finish", "group": "Style", "data_type": "enum", "allowed_values": ["Matte", "Glossy", "Soft", "Crisp", "Textured"]},
+        {"name": "care_instructions", "label": "Care Instructions", "group": "Care", "data_type": "text"},
+        {"name": "country_of_origin", "label": "Country of Origin", "group": "Compliance", "data_type": "text", "required": true},
+        {"name": "hsn_code", "label": "HSN Code", "group": "Compliance", "data_type": "text"}
+      ]
+    },
+    "saree": {
+      "display_name": "Saree",
+      "attributes": [
+        {"name":"title","label":"Product Title","group":"Identity","data_type":"text","required":true},
+        {"name":"brand","label":"Brand","group":"Identity","data_type":"text","required":true},
+        {"name":"fabric_type","label":"Fabric Type","group":"Material","data_type":"enum","required":true,"allowed_values":["Cotton","Kerala Cotton","Silk","Cotton Silk","Linen","Chiffon","Georgette","Rayon","Tissue","Organza","Other"]},
+        {"name":"body_colour","label":"Body Colour","group":"Design","data_type":"text","required":true},
+        {"name":"border_type","label":"Border Type","group":"Design","data_type":"enum","allowed_values":["With Border","No Border","Contrast Border","Self Border","Zari Border","Custom"]},
+        {"name":"border_width","label":"Border Width","group":"Design","data_type":"text"},
+        {"name":"pattern","label":"Pattern","group":"Design","data_type":"enum","allowed_values":["Plain","Printed","Woven","Floral","Checks","Stripes","Jacquard","Embroidered","Motif","Other"]},
+        {"name":"motif","label":"Motif","group":"Design","data_type":"text"},
+        {"name":"work","label":"Work","group":"Design","data_type":"text"},
+        {"name":"saree_length_cm","label":"Saree Length (cm)","group":"Dimensions","data_type":"number","required":true},
+        {"name":"width_cm","label":"Width (cm)","group":"Dimensions","data_type":"number","required":true},
+        {"name":"blouse_piece_included","label":"Blouse Piece Included","group":"Included Items","data_type":"boolean","required":true},
+        {"name":"occasion","label":"Occasion","group":"Style","data_type":"text"},
+        {"name":"country_of_origin","label":"Country of Origin","group":"Compliance","data_type":"text","required":true}
+      ]
+    },
+    "women_kurti": {
+      "display_name": "Women’s Kurti",
+      "attributes": [
+        {"name":"title","label":"Product Title","group":"Identity","data_type":"text","required":true},
+        {"name":"brand","label":"Brand","group":"Identity","data_type":"text","required":true},
+        {"name":"fabric_type","label":"Fabric Type","group":"Material","data_type":"enum","required":true,"allowed_values":["Cotton","Rayon","Viscose","Silk","Cotton Silk","Linen","Georgette","Chiffon","Polyester","Other"]},
+        {"name":"colour","label":"Colour","group":"Design","data_type":"text","required":true},
+        {"name":"pattern","label":"Pattern","group":"Design","data_type":"text"},
+        {"name":"design","label":"Design","group":"Design","data_type":"text"},
+        {"name":"neck_style","label":"Neck Style","group":"Garment","data_type":"enum","allowed_values":["Round Neck","V Neck","Collared","Mandarin Collar","Boat Neck","Square Neck","Keyhole","Other"]},
+        {"name":"sleeve_length","label":"Sleeve Length","group":"Garment","data_type":"enum","allowed_values":["Sleeveless","Short Sleeve","Three Quarter Sleeve","Full Sleeve","Other"]},
+        {"name":"garment_length","label":"Garment Length","group":"Garment","data_type":"enum","required":true,"allowed_values":["Short","Regular","Long","Calf Length","Custom"]},
+        {"name":"fit_type","label":"Fit","group":"Garment","data_type":"enum","allowed_values":["Regular Fit","Slim Fit","Loose Fit","Straight Fit","A-Line","Flared"]},
+        {"name":"size","label":"Size","group":"Size","data_type":"text","required":true},
+        {"name":"occasion","label":"Occasion","group":"Style","data_type":"text"},
+        {"name":"country_of_origin","label":"Country of Origin","group":"Compliance","data_type":"text","required":true}
+      ]
+    },
+    "women_top": {
+      "display_name": "Women’s Top",
+      "attributes": [
+        {"name":"title","label":"Product Title","group":"Identity","data_type":"text","required":true},
+        {"name":"brand","label":"Brand","group":"Identity","data_type":"text","required":true},
+        {"name":"fabric_type","label":"Fabric Type","group":"Material","data_type":"enum","required":true,"allowed_values":["Cotton","Rayon","Viscose","Polyester","Linen","Georgette","Chiffon","Other"]},
+        {"name":"colour","label":"Colour","group":"Design","data_type":"text","required":true},
+        {"name":"pattern","label":"Pattern","group":"Design","data_type":"text"},
+        {"name":"neck_style","label":"Neck Style","group":"Garment","data_type":"text"},
+        {"name":"sleeve_length","label":"Sleeve Length","group":"Garment","data_type":"enum","allowed_values":["Sleeveless","Short Sleeve","Three Quarter Sleeve","Full Sleeve","Other"]},
+        {"name":"garment_length","label":"Garment Length","group":"Garment","data_type":"enum","required":true,"allowed_values":["Short","Regular","Long","Crop","Custom"]},
+        {"name":"fit_type","label":"Fit","group":"Garment","data_type":"text"},
+        {"name":"size","label":"Size","group":"Size","data_type":"text","required":true},
+        {"name":"occasion","label":"Occasion","group":"Style","data_type":"text"},
+        {"name":"country_of_origin","label":"Country of Origin","group":"Compliance","data_type":"text","required":true}
+      ]
+    }
+  }
+}

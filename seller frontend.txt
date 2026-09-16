@@ -1,0 +1,1522 @@
+Below is a single full frontend technical specification you can give to your developer and build in one go.
+
+KHAGATARA Amazon Listing Automation Frontend
+Full Technical Specification — v1
+1. Technology
+Frontend:
+Next.js
+React
+TypeScript
+App Router
+CSS Modules / plain CSS
+No Tailwind
+No Vite
+
+Backend:
+Existing Python automation engine
+REST API layer to be added
+
+Communication:
+REST/JSON
+multipart/form-data for uploads
+
+Browser:
+Chrome / Edge
+
+Primary deployment target:
+Local PC initially
+
+Existing backend remains the source of truth for:
+
+Amazon SP-API
+Product type discovery
+Amazon schemas
+Local catalogs
+Auto-fill
+Review
+Approval
+Variants
+Mapping
+Validation
+Payload generation
+2. Frontend design goals
+
+The interface must be:
+
+Desktop-first
+Clean
+Professional
+Fast
+Dense but readable
+Keyboard-friendly
+Accessible
+Responsive enough for smaller screens
+
+The user should be able to complete:
+
+Upload
+→ Auto-fill
+→ Review
+→ Approve/Edit
+→ Select attributes
+→ Generate variants
+→ Map to Amazon
+→ Validate
+→ Preview
+→ Submit
+
+without needing Seller Central for ordinary listing preparation.
+
+3. Global UI system
+Font size selector
+
+Default:
+
+12px
+
+Allowed:
+
+9px
+10px
+11px
+12px   ← default
+13px
+14px
+15px
+16px
+17px
+18px
+
+Do not allow values outside 9–18.
+
+Store preference locally:
+
+localStorage:
+khagatara-font-size
+
+Apply through CSS variable:
+
+--ui-font-size: 12px;
+
+Derived sizes should scale relative to it.
+
+Example:
+
+body:
+var(--ui-font-size)
+
+small:
+calc(var(--ui-font-size) - 2px)
+
+heading:
+calc(var(--ui-font-size) + 8px)
+
+The entire UI must update immediately without reload.
+
+4. Theme selector
+
+Provide:
+
+Theme
+[ Light ]
+[ Dark ]
+[ System ]
+
+Default:
+
+System
+
+Store:
+
+localStorage:
+khagatara-theme
+
+Use CSS variables rather than separate component color definitions.
+
+Required semantic variables:
+
+--bg
+--surface
+--surface-2
+--border
+--text
+--text-muted
+--primary
+--primary-hover
+--success
+--warning
+--danger
+--info
+--input-bg
+--input-border
+--focus
+
+Do not hard-code colors repeatedly across components.
+
+5. Application shell
+
+Layout:
+
+┌─────────────────────────────────────────────────────────────┐
+│ KHAGATARA                         Theme  Font  User         │
+├───────────────┬─────────────────────────────────────────────┤
+│               │                                             │
+│ Dashboard     │                                             │
+│ Products      │                                             │
+│ Drafts        │             MAIN CONTENT                    │
+│ Review        │                                             │
+│ Variants      │                                             │
+│ Amazon        │                                             │
+│ Schemas       │                                             │
+│ Attributes    │                                             │
+│ Settings      │                                             │
+│               │                                             │
+└───────────────┴─────────────────────────────────────────────┘
+
+Sidebar must be collapsible.
+
+Desktop default:
+
+240px
+
+Collapsed:
+
+64px
+
+Remember sidebar state in localStorage.
+
+6. Main navigation
+Dashboard
+Products
+Uploads
+Review Queue
+Variants
+Amazon Mapping
+Validation
+Schemas
+Attributes
+Submission History
+Settings
+
+Do not expose technical debugging pages in the main navigation.
+
+Developer/debug pages can live under:
+
+/settings/developer
+7. Dashboard
+
+Show:
+
+Products
+Drafts
+Awaiting Review
+Approved
+Ready for Amazon
+Submitted
+Errors
+
+Cards:
+
+Total Products
+Draft Products
+Review Required
+Approved
+Ready
+Submitted
+
+Recent activity:
+
+Product
+Action
+Status
+Time
+
+Examples:
+
+Blue Long Cotton Floral Kurti
+Auto-fill completed
+Review required
+
+Cream Kerala Cotton Kasavu Saree
+Approved
+Ready for mapping
+
+SKU KHS-001
+Amazon submission
+Success
+8. Product creation workflow
+
+Route:
+
+/products/new
+
+Step indicator:
+
+1 Source
+2 Category
+3 Auto-Fill
+4 Review
+5 Attributes
+6 Variants
+7 Amazon Mapping
+8 Validation
+9 Preview
+10 Submit
+
+The user can move backward without losing data.
+
+9. Upload source screen
+
+Support:
+
+Images
+PDF
+CSV
+Excel
+JSON
+Text
+Manual entry
+
+Drag-and-drop zone:
+
+┌────────────────────────────────────────┐
+│ Drop files here                        │
+│                                        │
+│ Upload images / PDF / CSV / Excel      │
+│                                        │
+│           [ Browse Files ]             │
+└────────────────────────────────────────┘
+
+Show uploaded files:
+
+filename
+type
+size
+status
+remove
+
+Backend endpoint:
+
+POST /api/products/upload
+10. Product/category selector
+
+Example:
+
+Product Category
+[ Kerala Saree ▼ ]
+
+Searchable category selector.
+
+Categories should come from backend:
+
+GET /api/categories
+
+Do not hard-code category lists into React.
+
+Backend response:
+
+{
+  "categories": [
+    {
+      "id": "kerala_saree",
+      "name": "Kerala Saree"
+    },
+    {
+      "id": "women_kurti",
+      "name": "Women's Kurti"
+    }
+  ]
+}
+11. Auto-fill screen
+
+Show detected attributes in a table.
+
+Columns:
+
+Attribute
+Detected Value
+Source
+Confidence
+Status
+Action
+
+Example:
+
+Fabric Type    Cotton       description   86%   Review
+Colour         Blue         filename      84%   Review
+Pattern        Floral       description   86%   Review
+
+Confidence badges:
+
+≥ 90%  High
+70–89% Medium
+< 70%  Low
+
+Conflict badge:
+
+⚠ Conflict
+
+Actions:
+
+Accept
+Edit
+Reject
+
+Buttons:
+
+Accept All High Confidence
+Accept Selected
+Reject Selected
+Continue to Review
+
+Backend should return the same field structure already supported by the current review engine.
+
+12. Product review screen
+
+This is one of the most important screens.
+
+Layout:
+
+┌───────────────────────────────────────────────┐
+│ Product Review                                │
+├──────────────────────┬────────────────────────┤
+│ Attribute            │ Value                  │
+├──────────────────────┼────────────────────────┤
+│ Title                │ Blue Long Cotton...   │
+│ Brand                │ KHAGATARA             │
+│ Fabric Type          │ Cotton     🟡         │
+│ Colour               │ Blue       🟡         │
+│ Pattern              │ Floral     🟡         │
+└──────────────────────┴────────────────────────┘
+
+Each row:
+
+value
+source
+confidence
+review_state
+
+Review states:
+
+manual
+accepted
+edited
+rejected
+pending
+
+The frontend must visually distinguish these.
+
+13. Approval system
+
+The frontend must respect the existing backend rule:
+
+unaccepted suggestions remain blocked
+
+Do not allow:
+
+Review complete
+→ bypass approval
+→ map to Amazon
+
+unless backend says:
+
+ready_for_mapping = true
+
+Approval controls:
+
+Accept
+Edit
+Reject
+
+After editing:
+
+review_state = edited
+
+After accepting:
+
+review_state = accepted
+
+Show:
+
+6 fields require approval
+
+or:
+
+All fields approved
+Ready for mapping
+14. Attribute editor
+
+Route:
+
+/products/[id]/attributes
+
+Use grouped collapsible sections.
+
+Example:
+
+BASIC INFORMATION
+────────────────────────
+Title
+Brand
+Description
+
+FABRIC
+────────────────────────
+Fabric Type
+Material
+Weave
+Finish
+
+BORDER
+────────────────────────
+Border
+Border Width
+Border Colour
+Border Style
+
+WORK
+────────────────────────
+Body Work
+Border Work
+Sequence
+Tissue
+
+DESIGN
+────────────────────────
+Pattern
+Motif
+Print
+Theme
+
+OCCASION
+────────────────────────
+Daily Wear
+Festival
+Onam
+Wedding
+Party
+
+The UI should be generated dynamically from:
+
+GET /api/categories/{category}/attributes
+
+No product category should require a new React page.
+
+15. Attribute input types
+
+Support:
+
+text
+number
+decimal
+boolean
+single_select
+multi_select
+textarea
+date
+measurement
+currency
+url
+image
+
+For select controls:
+
+searchable dropdown
+
+For multi-select:
+
+checkboxes + searchable selection
+
+For very long catalogs:
+
+virtualized option list
+16. "Other / Custom" option
+
+Every suitable category attribute can provide:
+
+Other
+
+Clicking it displays:
+
+Custom value:
+[________________]
+
+Custom values should be stored separately from system-defined values.
+
+Example:
+
+{
+  "attribute": "border_style",
+  "value": "Custom Antique Temple Border",
+  "source": "manual"
+}
+17. Local catalog management
+
+Route:
+
+/attributes
+
+Allow user to view:
+
+Category
+Attribute
+Available values
+Input type
+Required
+Active
+
+Admin actions:
+
+Add attribute
+Edit attribute
+Disable attribute
+Add option
+Remove option
+
+Do not physically delete values that are already used by products.
+
+Use:
+
+active: false
+
+instead.
+
+18. Variant builder
+
+Route:
+
+/products/[id]/variants
+
+Show:
+
+Select variant dimensions
+
+Example:
+
+Colour
+☑ Cream
+☑ White
+☑ Ivory
+
+Border Width
+☑ 1 inch
+☑ 2 inch
+
+Design
+☑ Peacock
+☑ Floral
+☑ Kathakali
+
+Fabric
+☑ Cotton
+☑ Tissue
+
+Then:
+
+[ Generate Variants ]
+
+The frontend sends only selected dimensions to backend.
+
+Backend remains responsible for:
+
+combination generation
+availability exclusions
+runaway count protection
+SKU generation
+
+The frontend must never reimplement that business logic.
+
+19. Variant result table
+
+Columns:
+
+SKU
+Colour
+Fabric
+Border
+Design
+Status
+
+Actions:
+
+Edit
+Duplicate
+Disable
+Delete
+
+Show:
+
+Generated: 24
+Active: 18
+Excluded: 6
+20. Amazon mapping screen
+
+Route:
+
+/products/[id]/mapping
+
+Display two columns:
+
+LOCAL ATTRIBUTE         AMAZON ATTRIBUTE
+──────────────────────────────────────────
+Fabric Type             [ Amazon field ▼ ]
+Colour                  [ Amazon field ▼ ]
+Pattern                 [ Amazon field ▼ ]
+Border                  [ Amazon field ▼ ]
+
+Show mapping status:
+
+Mapped
+Unmapped
+Conflict
+Invalid
+
+Backend controls actual mapping logic.
+
+Frontend displays and edits mappings through API.
+
+21. Amazon schema screen
+
+Route:
+
+/schemas
+
+Show:
+
+Product Type
+Marketplace
+Locale
+Version
+Requirements
+Last Retrieved
+Status
+
+Example:
+
+Product Type: LUGGAGE
+Marketplace: Amazon.in
+Requirements: LISTING
+Version: ...
+
+Do not represent Sandbox placeholder data as production schema.
+
+Show clear badge:
+
+SANDBOX
+
+when applicable.
+
+22. Validation screen
+
+Route:
+
+/products/[id]/validation
+
+Categories:
+
+Required fields
+Data types
+Allowed values
+Mappings
+Variants
+Images
+Offers
+Amazon schema
+
+Example:
+
+✓ Required fields
+✓ Allowed values
+✓ Data types
+⚠ 2 optional fields missing
+✓ Variant structure
+✓ Mapping
+
+Blocking errors:
+
+🔴 BLOCKING
+
+Warnings:
+
+🟡 WARNING
+
+Success:
+
+🟢 READY
+
+Primary button:
+
+[ Validate Again ]
+
+Only display Ready for Amazon if backend confirms.
+
+23. Amazon preview
+
+Route:
+
+/products/[id]/preview
+
+Show human-readable view first.
+
+Tabs:
+
+Summary
+Mapped Attributes
+Offer
+Variants
+JSON
+
+JSON viewer:
+
+syntax highlighting
+copy button
+download button
+
+Never allow the frontend to alter the JSON directly unless we explicitly add an advanced editor.
+
+24. Submission screen
+
+Show final confirmation:
+
+Product:
+Blue Long Cotton Floral Kurti
+
+Category:
+Women's Kurti
+
+Variants:
+12
+
+Validation:
+PASSED
+
+Marketplace:
+Amazon.in
+
+Button:
+
+[ Push to Amazon ]
+
+Confirmation modal:
+
+This will submit the prepared listing to Amazon.
+Continue?
+
+[ Cancel ] [ Submit ]
+25. Submission history
+
+Route:
+
+/submissions
+
+Columns:
+
+Product
+SKU
+Marketplace
+Time
+Status
+Amazon response
+
+Statuses:
+
+Queued
+Submitted
+Accepted
+Rejected
+Error
+Retrying
+
+Click row for detailed response.
+
+26. API layer
+
+Frontend should use a single API client:
+
+src/lib/api.ts
+
+Do not scatter raw fetch() calls everywhere.
+
+Example architecture:
+
+src/lib/api.ts
+src/lib/api/products.ts
+src/lib/api/categories.ts
+src/lib/api/review.ts
+src/lib/api/variants.ts
+src/lib/api/amazon.ts
+27. Suggested backend endpoints
+GET    /api/health
+
+GET    /api/categories
+GET    /api/categories/{id}/attributes
+
+POST   /api/products
+GET    /api/products
+GET    /api/products/{id}
+PATCH  /api/products/{id}
+
+POST   /api/products/upload
+POST   /api/products/{id}/autofill
+
+GET    /api/products/{id}/review
+POST   /api/products/{id}/review/approve
+POST   /api/products/{id}/review/edit
+
+POST   /api/products/{id}/variants/generate
+GET    /api/products/{id}/variants
+
+GET    /api/products/{id}/mapping
+POST   /api/products/{id}/mapping
+
+POST   /api/products/{id}/validate
+GET    /api/products/{id}/validation
+
+GET    /api/products/{id}/preview
+
+POST   /api/products/{id}/submit
+
+GET    /api/submissions
+
+GET    /api/schemas
+POST   /api/schemas/refresh
+28. State management
+
+Do not put the complete product object into global React state.
+
+Use:
+
+Server state:
+TanStack Query
+
+Local UI state:
+React useState/useReducer
+
+Persist drafts on backend.
+
+Frontend should not depend on browser localStorage as the primary product database.
+
+LocalStorage should only hold preferences such as:
+
+theme
+font size
+sidebar state
+29. Product draft model
+
+Conceptually:
+
+{
+  "id": "product-id",
+  "category": "kerala_saree",
+  "status": "review",
+  "sourceFiles": [],
+  "attributes": {},
+  "review": {},
+  "variants": [],
+  "mapping": {},
+  "validation": {},
+  "amazon": {}
+}
+
+Backend owns the authoritative version.
+
+30. File upload
+
+Use:
+
+multipart/form-data
+
+Show:
+
+upload progress
+processing
+completed
+failed
+
+For images:
+
+thumbnail preview
+remove
+replace
+primary image selector
+31. Image review
+
+Product image panel:
+
+┌─────────┐ ┌─────────┐ ┌─────────┐
+│ Image 1 │ │ Image 2 │ │ Image 3 │
+└─────────┘ └─────────┘ └─────────┘
+
+[ Set Primary ]
+
+Later the auto-fill system can consume these images.
+
+Do not infer unsupported product facts merely because an image exists.
+
+32. Auto-fill architecture
+
+Frontend should receive:
+
+{
+  "attribute": "fabric_type",
+  "value": "Cotton",
+  "source": "description",
+  "confidence": 0.86,
+  "review_state": "medium"
+}
+
+Frontend displays it.
+
+The backend remains responsible for:
+
+confidence
+conflicts
+approval
+33. Error handling
+
+Never show raw Python tracebacks to normal users.
+
+Backend returns:
+
+{
+  "error": {
+    "code": "SCHEMA_NOT_AVAILABLE",
+    "message": "Amazon schema is not currently available.",
+    "details": "..."
+  }
+}
+
+Frontend maps codes to user-friendly messages.
+
+Technical details go into developer logs.
+
+34. Toast/notification system
+
+Support:
+
+warning
+error
+info
+
+Examples:
+
+✓ Product approved
+✓ 18 variants generated
+⚠ 4 fields require review
+✕ Amazon submission failed
+35. Loading states
+
+Every network operation needs:
+
+spinner
+disabled state
+progress indicator
+
+Do not leave blank screens during loading.
+
+36. Keyboard accessibility
+
+Support:
+
+Shift+Tab
+Enter
+Escape
+Arrow keys
+Ctrl/Cmd+S
+
+Useful shortcut:
+
+Never intercept browser shortcuts unnecessarily.
+
+37. Accessibility
+
+Required:
+
+keyboard navigation
+visible focus
+aria-labels where appropriate
+color + text for statuses
+sufficient contrast
+
+Do not communicate status using color alone.
+
+38. Responsive design
+
+Primary target:
+
+Supported:
+
+768px
+
+At smaller widths:
+
+tables become horizontally scrollable
+two-column forms become one column
+39. Component structure
+
+Suggested:
+
+src/
+├── app/
+│   ├── page.tsx
+│   ├── products/
+│   ├── uploads/
+│   ├── review/
+│   ├── variants/
+│   ├── mapping/
+│   ├── validation/
+│   ├── schemas/
+│   ├── attributes/
+│   ├── submissions/
+│   └── settings/
+│
+├── components/
+│   ├── layout/
+│   ├── dashboard/
+│   ├── products/
+│   ├── upload/
+│   ├── review/
+│   ├── attributes/
+│   ├── variants/
+│   ├── mapping/
+│   ├── validation/
+│   └── common/
+│
+├── lib/
+│   ├── api/
+│   ├── types/
+│   ├── utils/
+│   └── preferences/
+│
+└── styles/
+    └── globals.css
+40. Design system components
+
+Build reusable components:
+
+Button
+Input
+Textarea
+Select
+MultiSelect
+Checkbox
+Radio
+Toggle
+Badge
+Card
+Modal
+Drawer
+Tabs
+Accordion
+DataTable
+Pagination
+Toast
+Tooltip
+ProgressBar
+ConfidenceBadge
+StatusBadge
+FileUploader
+ImageUploader
+
+Do not create separate versions of these for every page.
+
+41. Visual language
+
+Use a restrained business application style:
+
+Rounded corners
+Subtle borders
+Small shadows
+Compact tables
+Clear section headers
+Consistent spacing
+
+Avoid:
+
+huge gradients
+excessive animations
+oversized cards
+unnecessary decorative graphics
+
+Animation should generally be:
+
+and optional.
+
+42. Settings page
+
+Sections:
+
+    Theme
+    Font Size
+    Compact/Comfortable Density
+
+Application
+    Default Marketplace
+    Default Locale
+
+Uploads
+    Accepted formats
+
+Developer
+    API URL
+    Connection Status
+    Sandbox/Production indicator
+
+Do not expose secrets.
+
+Never display:
+
+refresh token
+access token
+43. Font settings UI
+
+Top-right control:
+
+A−   12px   A+
+
+Clicking opens:
+
+Font Size
+
+9
+10
+11
+12 ✓
+13
+14
+15
+16
+17
+18
+
+Could also provide a slider:
+
+9 ─────────●───────── 18
+            12
+
+Use both only if the UI remains uncluttered; the dropdown is simpler and more precise.
+
+44. Theme UI
+
+Top-right:
+
+☀ Light
+◐ System
+☾ Dark
+
+Current selection gets a checkmark.
+
+Theme change must happen immediately.
+
+45. Developer diagnostics
+
+Route:
+
+/settings/developer
+
+Show:
+
+Amazon API               Connected
+Environment              Sandbox
+Schema service           Available
+Catalog service          Available
+
+For failures:
+
+Last successful request: ...
+
+Provide:
+
+[ Test Amazon Connection ]
+
+Never show secrets.
+
+46. Product lifecycle
+
+Use explicit state machine:
+
+ ↓
+AUTO_FILLING
+ ↓
+REVIEW
+ ↓
+APPROVAL
+ ↓
+APPROVED
+ ↓
+MAPPING
+ ↓
+VALIDATING
+ ↓
+READY
+ ↓
+SUBMITTING
+ ↓
+SUBMITTED
+
+Error state can occur from any API operation:
+
+Allow retry without losing the draft.
+
+47. Important business rule
+
+The frontend must never assume:
+
+Backend response controls readiness.
+
+For example:
+
+{
+  "ready_for_mapping": true,
+  "action_required": [],
+  "local_issues": []
+}
+
+Only then should mapping be unlocked.
+
+Likewise:
+
+must come from backend validation.
+
+48. Product-category extensibility
+
+There must be no category-specific frontend architecture.
+
+This:
+
+and this:
+
+must use the same form renderer.
+
+Only data changes:
+
+attributes
+values
+input types
+validation rules
+variant dimensions
+
+This is critical because you plan to support many other product types.
+
+49. Example Kerala Saree UX
+[ Kerala Saree ]
+
+BASIC
+Title
+Brand
+Description
+
+FABRIC
+Fabric Type
+Material
+Weave
+Finish
+
+BORDER
+Border
+Border Width
+Border Colour
+Border Style
+
+WORK
+Body Work
+Border Work
+Tissue
+Sequence
+Zari
+
+DESIGN
+Pattern
+Motif
+Print
+Peacock
+Deer
+Kathakali
+
+OCCASION
+Daily Wear
+Onam
+Festival
+Wedding
+
+MEASUREMENTS
+Length
+Width
+Weight
+
+[ Save Draft ] [ Validate ]
+50. Example Kurti UX
+
+Same renderer:
+
+[ Women's Kurti ]
+
+FABRIC
+Fabric Type
+
+STYLE
+Length
+Cut
+Slit
+Pleat
+
+NECK
+Neck Style
+
+SLEEVE
+Sleeve Length
+
+PATTERN
+Pattern
+
+WORK
+Sequence
+Non Sequence
+
+SIZE
+XS
+S
+M
+L
+XL
+XXL
+51. Auto-fill UX example
+│ AUTO-FILL                                    │
+├─────────────────┬──────────────┬─────────────┤
+│ Fabric Type     │ Cotton       │ 86% 🟡      │
+│ Colour          │ Blue         │ 84% 🟡      │
+│ Pattern         │ Floral       │ 86% 🟡      │
+│ Neck Style      │ Round Neck   │ 86% 🟡      │
+│ Sleeve Length   │ 3/4          │ 86% 🟡      │
+│ Length          │ Long         │ 86% 🟡      │
+└─────────────────┴──────────────┴─────────────┘
+
+[ Accept All ] [ Review ]
+52. Variant UX example
+VARIANT BUILDER
+
+Colour
+☑ Cream
+☑ White
+☑ Ivory
+
+Border
+☑ 1 inch
+☑ 2 inch
+☑ 3 inch
+
+Design
+☑ Peacock
+☑ Floral
+☑ Kathakali
+
+Fabric
+☑ Cotton
+☑ Tissue
+
+                        [Generate]
+
+Potential combinations: 54
+After exclusions: 32
+
+Backend's runaway protection remains authoritative.
+
+53. Final frontend goal
+
+The user should eventually be able to do:
+
+1. Upload saree photo
+2. Select Kerala Saree
+3. Auto-fill
+4. Review highlighted fields
+5. Accept/Edit
+6. Choose variant dimensions
+7. Generate variants
+8. Map to Amazon
+9. Validate
+10. Preview
+11. Push
+
+with minimal manual typing.
+
+54. Build order
+
+Build the frontend in this exact order:
+
+Phase 1
+App shell
+Theme
+Font selector
+Settings
+Dashboard
+
+Phase 2
+Product creation
+Upload
+Category selection
+
+Phase 3
+Auto-fill
+Review
+Approval
+
+Phase 4
+Dynamic attribute renderer
+Catalog UI
+
+Phase 5
+Variant builder
+
+Phase 6
+Amazon mapping
+Schema viewer
+
+Phase 7
+Validation
+Preview
+
+Phase 8
+Submission
+History
+Error handling
+
+Phase 9
+Image intelligence integration
+Production hardening
+Final project architecture
+                         KHAGATARA
+                            │
+                ┌───────────┴───────────┐
+                │                       │
+             FRONTEND                 BACKEND
+           Next.js/React              Python
+                │                       │
+                │       ┌───────────────┼────────────────┐
+                │       │               │                │
+                ▼       ▼               ▼                ▼
+             Upload  Auto-fill       Catalog          Amazon
+                │       │               │                │
+                └───────┼───────────────┼────────────────┘
+                        ▼
+                     Review
+                        ↓
+                    Approval
+                        ↓
+                     Variants
+                        ↓
+                  Amazon Mapping
+                        ↓
+                    Validation
+                        ↓
+                     Preview
+                        ↓
+                     Submit
+Current backend status
+
+Your latest approval tests passed:
+
+2/2 approval tests ✅
+
+Together with the earlier suites, you now have 25/25 automated tests passing across the current core modules.
+
+So now we should build the Next.js frontend against this already-tested Python backend, rather than adding more standalone backend functionality first.s

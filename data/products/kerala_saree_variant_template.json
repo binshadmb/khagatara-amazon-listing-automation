@@ -1,0 +1,16 @@
+{
+  "base_sku": "KS",
+  "base_attributes": {
+    "brand": "KHAGATARA",
+    "country_of_origin": "India"
+  },
+  "dimensions": [
+    {"attribute": "fabric_type", "options": [{"value": "Cotton", "code": "COT"}, {"value": "Tissue", "code": "TIS"}, {"value": "Silk", "code": "SLK"}]},
+    {"attribute": "body_colour", "options": [{"value": "White", "code": "WHT"}, {"value": "Cream", "code": "CRM"}, {"value": "Off White", "code": "OFW"}, {"value": "Ivory", "code": "IVY"}, {"value": "Rose Gold", "code": "RSG"}]},
+    {"attribute": "border_width", "options": [{"value": "1 inch", "code": "1"}, {"value": "2 inch", "code": "2"}, {"value": "3 inch", "code": "3"}, {"value": "No Border", "code": "NB"}]},
+    {"attribute": "motif", "options": [{"value": "Peacock", "code": "PEA"}, {"value": "Floral", "code": "FLR"}, {"value": "Kathakali", "code": "KAT"}, {"value": "Temple", "code": "TMP"}]}
+  ],
+  "excluded_combinations": [
+    {"border_width": "No Border", "motif": "Temple"}
+  ]
+}
