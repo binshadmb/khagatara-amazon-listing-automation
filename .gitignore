@@ -1,7 +1,21 @@
+# Environment
 .env
 .env.*
+
+# Secrets
 *.pem
 *.key
+*.dpapi
+*.secret
+*secret*
 credentials/
 secrets/
 KHAGATARA-SECURE/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Logs
+logs/
