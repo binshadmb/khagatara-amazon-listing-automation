@@ -19,3 +19,15 @@ __pycache__/
 
 # Logs
 logs/
+
+# Uploaded source files
+data/uploads/
+
+# Build and Node outputs
+.next/
+frontend/.next/
+frontend/.npm-cache/
+node_modules/
+frontend/node_modules/
+.venv/
+*.tsbuildinfo

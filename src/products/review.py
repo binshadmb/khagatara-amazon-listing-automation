@@ -55,17 +55,33 @@ class ProductReview:
 def build_product_review(
     product_draft: dict[str, Any],
     category: ProductCategory,
+    uploads_dir: str | Path | None = None,
 ) -> ProductReview:
     """Combine auto-fill and manual input into one reviewable local draft."""
     description = product_draft.get("description", "")
     filename = product_draft.get("filename", "")
     manual_attributes = product_draft.get("attributes", {})
+    upload_id = product_draft.get("upload_id")
     if not isinstance(description, str) or not isinstance(filename, str):
         raise ValueError("description and filename must be text")
     if not isinstance(manual_attributes, dict):
         raise ValueError("attributes must be an object")
 
-    auto = autofill_product(category=category, description=description, filename=filename)
+    source_text = ""
+    if upload_id and isinstance(upload_id, str):
+        try:
+            from src.products.ingestion import ingest_file
+            dir_path = Path(uploads_dir) if uploads_dir else Path(__file__).resolve().parents[2] / "data" / "uploads"
+            matches = list(dir_path.glob(f"{upload_id}.*"))
+            if matches:
+                ingested = ingest_file(matches[0])
+                source_text = ingested.text
+        except Exception:
+            pass
+
+    full_description = f"{description}\n{source_text}".strip() if source_text else description
+
+    auto = autofill_product(category=category, description=full_description, filename=filename)
     combined = auto.attributes()
     combined.update(manual_attributes)
     local_issues = tuple(validate_local_attributes(combined, category))
